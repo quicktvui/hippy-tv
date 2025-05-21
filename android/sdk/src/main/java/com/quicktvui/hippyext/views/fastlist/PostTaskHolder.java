@@ -1,0 +1,20 @@
+package com.quicktvui.hippyext.views.fastlist;
+
+public interface PostTaskHolder {
+  int POST_TASK_CATEGORY_IMG = -2;
+  int POST_TASK_CATEGORY_TEXT = -1;
+  int POST_TASK_CATEGORY_DELAY_LOAD = -101;
+  int POST_TASK_CATEGORY_UPDATE_LAYOUT = -102;
+  int POST_TASK_CATEGORY_PLACEHOLDER_TO_CONTENT = -103;
+  int POST_TASK_CATEGORY_UPDATE_ITEM = -104;
+  int[] POST_UI_TASK_FOR_VIEW = new int[]{
+    POST_TASK_CATEGORY_IMG,
+    POST_TASK_CATEGORY_TEXT,
+    POST_TASK_CATEGORY_DELAY_LOAD,
+    POST_TASK_CATEGORY_UPDATE_LAYOUT,
+    POST_TASK_CATEGORY_PLACEHOLDER_TO_CONTENT
+  };
+  void setRootPostHandlerView(PostHandlerView pv);
+
+
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@huantv/vue-native-components",
+  "repository": "https://github.com/Tencent/Hippy/tree/master/packages/hippy-vue-native-components",
+  "version": "1.1.0",
+  "description": "Hippy Vue Native components  for TV",
+  "author": "zhaopeng <zhaopengdev@163.com>",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "homepage": "http://quicktvui.com",
+  "bugs": {
+    "url": "https://github.com/Tencent/Hippy/issues"
+  },
+  "keywords": [
+    "Hippy-Vue",
+    "Native",
+    "TabHost",
+    "ViewPager",
+    "RefreshWrapper",
+    "tab-host",
+    "view-pager",
+    "ul-refresh"
+  ]
+}

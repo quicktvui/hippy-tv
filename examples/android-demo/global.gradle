@@ -1,0 +1,82 @@
+ext{
+
+
+    configuration = [
+            compileSdkVersion: 30,
+            buildToolsVersion: '29.0.2',
+            minSdkVersion    : 14,
+            targetSdkVersion : 30,
+            versionCode      : 1,
+            versionName      : "1.0",
+            androidxVersion  : '1.0.0'
+    ]
+
+    def isWaterfallDev = false
+    def isWaterfallAppDev = false
+    def isItemCenterDev = false
+    def isBaseUIDev = false
+    def isBlueprintDEV = false
+    def isRendLabDEV = false
+    libraries = [
+            "baseui"                    :  isBaseUIDev ? 'huan.tvkit:baseui:999.9-DEV' : 'huan.tvkit:baseui:1.0.14.37-SNAPSHOT',
+            "render"                    : isRendLabDEV ? 'huan.tvkit:render:999.9-DEV' : 'huan.tvkit:render:1.0.11',
+            "item-center"               : isItemCenterDev ? 'huan.tvkit:item-center:999.9-DEV' : 'huan.tvkit:item-center:1.2.80-SNAPSHOT',
+            "api-template"              : 'huan.tvkit:apidemo-template:1.0.0',
+            "tvkit-leanback"            : 'huan.tvkit:leanback:1.0.0',
+            'blueprint'                 : isBlueprintDEV ? 'huan.tvkit:app-blueprint:999.9-DEV' : 'huan.tvkit:app-blueprint:0.9.32.32-SNAPSHOT',
+            'waterfall-app'             : isWaterfallAppDev ? 'huan.tvkit:waterfall-app:999.9-DEV' : 'huan.tvkit:waterfall-app:2.1.149-SNAPSHOT',
+            'waterfall'                 : isWaterfallDev ? 'huan.tvkit:waterfall:999.9-DEV' :  'huan.tvkit:waterfall:1.2.20.147-SNAPSHOT',
+            'blueprint-domain'          : 'huan.tvkit:blueprint-domain:0.9.1.-SNAPSHOT',
+            'grid-app'                  : 'huan.tvkit:grid-app:1.0.0.21-SNAPSHOT',
+            "rxjava"                    : 'io.reactivex:rxjava:1.1.7',
+            "rxandroid"                 : 'io.reactivex:rxandroid:1.1.0',
+            "rxlifecycle"               : 'com.trello:rxlifecycle:0.5.0',
+
+            "hippy"                     : 'huan.tvkit:hippy:2.0.3.245-SNAPSHOT',
+
+
+            "greendao"                  : 'de.greenrobot:greendao:2.1.0',
+            "greendao-generator"        : 'de.greenrobot:greendao-generator:2.1.0',
+            "RxGreenDao"                : 'io.github.llp:RxGreenDao:0.1',
+
+            "retrofit"                  : 'com.squareup.retrofit2:retrofit:2.0.0-beta4',
+            "retrofit-adapter-rxjava"   : 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2',
+            "retrofit-converter-jackson": 'com.squareup.retrofit:converter-jackson:2.0.0-beta2',
+            "okhttp"                    : 'com.squareup.okhttp3:okhttp:2.5.0',
+            "dagger"                    : 'com.google.dagger:dagger:2.0',
+            "dagger-compiler"           : 'com.google.dagger:dagger-compiler:2.0',
+            "javax.annotation"          : 'org.glassfish:javax.annotation:10.0-b28',
+            "autolayout"                : 'com.zhy:autolayout:1.4.3',
+            "fresco"                    : 'com.facebook.fresco:fresco:0.9.0+',
+            "butterknife"               : 'com.jakewharton:butterknife:7.0.1',
+            "eventbus"                  : 'org.greenrobot:eventbus:3.0.0',
+            "rxbinding"                 : 'com.jakewharton.rxbinding:rxbinding:0.4.0',
+            "rxbinding-support-v4"      : 'com.jakewharton.rxbinding:rxbinding-support-v4:0.4.0',
+            "rxbinding-appcompat-v7"    : 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0',
+            "rxbinding-recyclerview-v7" : 'com.jakewharton.rxbinding:rxbinding-recyclerview-v7:0.4.0',
+
+            "leakcanary-android"            : 'com.squareup.leakcanary:leakcanary-android:1.5.2',
+            "leakcanary-android-no-op"      : 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.2',
+
+
+            //android support
+            "android-core"              : 'androidx.core:core:1.2.0',
+            "appcompat-v7"              : 'androidx.appcompat:appcompat:'+configuration.androidxVersion,
+            "support-v4"                : 'androidx.legacy:legacy-support-v4:'+configuration.androidxVersion,
+            "support-annotations"       : 'com.android.support:support-annotations:'+configuration.androidxVersion,
+            "junit"                     : 'junit:junit:4.12',
+
+            "design"                    : 'com.google.android.material:material:1.0.0',
+            //将recyecleView v7由23.11换成25.3.1后，由俩点需要注意：
+            //1，RecycleView 的 requestChildRectangleOnScreen无效，改成LayoutManager内部的requestChildRectangleOnScreen方法，并且增加了一个参数。
+            //2，LayoutManager的LayoutDecorated改成了layoutDecoratedWithMargins
+            "recyclerview-v7"           : 'androidx.recyclerview:recyclerview:'+configuration.androidxVersion,
+            "cardview-v7"               : 'androidx.cardview:cardview::'+configuration.androidxVersion,
+
+            "leanback-v17"              : 'androidx.leanback:leanback:'+configuration.androidxVersion,
+            "multidex"                  : 'androidx.multidex:multidex:2.0.0',
+
+            "palette-v7"                : 'androidx.palette:palette:'+configuration.androidxVersion,
+
+    ]
+}

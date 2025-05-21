@@ -1,0 +1,20 @@
+{
+  "name": "@hippy4tv/waterfall",
+  "version": "0.0.1",
+  "description": "Hippy for TV!",
+  "main": "dist/index.js",
+  "homepage": "http://quicktvui.com",
+  "repository": "https://github.com/zhaopengdev/Hippy/tree/dev/packages/hippy4tv-vue",
+  "author": "zhaopeng <zhaopengdev@163.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Tencent/Hippy/issues"
+  },
+  "keywords": [
+    "Hippy-Vue",
+    "tv",
+    "hippy4tv",
+    "js",
+    "dynamic"
+  ]
+}

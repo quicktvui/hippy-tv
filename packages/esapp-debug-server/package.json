@@ -1,0 +1,28 @@
+{
+  "name": "@huantv/debug-server",
+  "version": "0.0.6",
+  "description": "Dev server fork",
+  "repository": "https://github.com/Tencent/Hippy/tree/master/packages/hippy-debug-server",
+  "homepage": "http://hippyjs.org",
+  "author": "zhaopengdev@163.tv",
+  "license": "Apache-2.0",
+  "bin": {
+    "hippy-debug": "index.js"
+  },
+  "scripts": {},
+  "keywords": [
+    "hippy",
+    "debug",
+    "debugger"
+  ],
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "dependencies": {
+    "find-up": "^4.1.0",
+    "koa": "^2.3.0",
+    "signale": "^1.4.0",
+    "ws": "^1.1.5",
+    "yargs": "^15.0.2"
+  }
+}

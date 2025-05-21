@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="focus_frame_cover"/>
+    <item type="id" name="focus_frame_frame"/>
+    <item type="id" name="focus_frame_shadow"/>
+    <item type="id" name="focus_frame_higilight"/>
+    <item type="id" name="focus_frame_bottombar"/>
+    <item type="id" name="focus_title"/>
+    <item type="id" name="focus_subtitle"/>
+    <item type="id" name="tag_focus_scale_animation"/>
+    <item type="id" name="tv_root_view"/>
+    <item type="id" name="page_root_view"/>
+    <item type="id" name="card_root_view"/>
+    <item type="id" name="tag_cover_flow_animation" />
+    <item type="id" name="tag_view_node" />
+    <item type="id" name="tag_item_id" />
+    <item type="id" name="tag_root_attach" />
+    <item type="id" name="tag_view_extend_4tv" />
+</resources>

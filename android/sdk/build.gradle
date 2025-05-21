@@ -1,0 +1,276 @@
+apply plugin: 'com.android.library'
+apply from: './mavencentral.gradle'
+
+ext {
+  CMAKE_PATH = "$projectDir.absolutePath/src/main/jni/CMakeLists.txt"
+  OUTPUT_PATH = "$buildDir/outputs/aar"
+  THIRD_PARTY_LIBRARY_PATH = "$projectDir.absolutePath/src/main/jni/third_party"
+  skipCmakeAndNinja = System.getenv('skipCmakeAndNinja') != null
+}
+
+buildscript {
+  repositories {
+    mavenLocal()
+    google()
+    //TODO 需换成公网mavenCenter
+    maven { url 'https://nexus.extscreen.com/repository/maven-public/' }
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.android.tools.build:gradle:4.2.1'
+    // NOTE: Do not place your application dependencies here; they belong
+    // in the individual module build.gradle files
+  }
+}
+
+allprojects {
+  ext {
+//    MAVEN_USER = System.getenv('maven_username')
+//    MAVEN_PWD = System.getenv('maven_password')
+//    MAVEN_URL = System.getenv('maven_url')
+  }
+
+  repositories {
+//    if (MAVEN_URL != null) {
+//      maven {
+//        url MAVEN_URL
+//        credentials {
+//          username MAVEN_USER
+//          password MAVEN_PWD
+//        }
+//      }
+//    }
+    mavenLocal()
+    google()
+    mavenCentral()
+    //TODO 需换成公网mavenCenter
+    maven { url 'https://nexus.extscreen.com/repository/maven-public/' }
+  }
+}
+
+android {
+  archivesBaseName = ARCHIVES_BASE_NAME
+  compileSdkVersion COMPILE_SDK_VERSION as int
+  ndkVersion = NDK_VERSION
+  defaultConfig {
+    minSdkVersion MIN_SDK_VERSION as int
+    targetSdkVersion TARGET_SDK_VERSION as int
+    versionCode VERSION_CODE as int
+    versionName VERSION_NAME
+
+    // 保证app使用aar时，会自动将该proguard文件添加到本身的proguard规则中
+    consumerProguardFiles 'proguard-rules1.pro'
+
+    buildConfigField("boolean", "ENABLE_SO_DOWNLOAD", ENABLE_SO_DOWNLOAD)
+    buildConfigField("boolean", "INCLUDE_SUPPORT_UI", INCLUDE_SUPPORT_UI)
+    buildConfigField("String", "CORE_VERSION_NAME", "\"${VERSION_NAME}\"")
+    buildConfigField("String", "CORE_VERSION_CODE", "\"${CORE_VERSION}\"")
+    buildConfigField("String", "COMMIT", "\"${COMMIT}\"")
+    buildConfigField("String", "INPUT_PREFERENCE", "\"${INPUT_PREFERENCE}\"")
+
+    packagingOptions {
+      if(!ENABLE_SO_DOWNLOAD.toBoolean()){
+        pickFirst 'lib/*/libc++_shared.so'
+      }else{
+        exclude 'lib/*/libc++_shared.so'
+      }
+
+      if (!INCLUDE_ABI_ARMEABI.toBoolean()) {
+        exclude 'lib/armeabi/*'
+      }
+      if (!INCLUDE_ABI_ARMEABI_V7A.toBoolean()) {
+        exclude 'lib/armeabi-v7a/*'
+      }
+      if (!INCLUDE_ABI_ARM64_V8A.toBoolean()) {
+        exclude 'lib/arm64-v8a/*'
+      }
+      if (!INCLUDE_ABI_X86.toBoolean()) {
+        exclude 'lib/x86/*'
+      }
+      if (!INCLUDE_ABI_X86_64.toBoolean()) {
+        exclude 'lib/x86_64/*'
+      }
+    }
+  }
+  lintOptions {//设置编译的lint开关，程序在buid的时候，会执行lint检查，有任何的错误或者警告提示，都会终止构建
+    abortOnError false
+  }
+  def v8Release = "x5-lite"
+  def v8Debug = "official-release"
+  if (V8_TAG == "latest") {
+    v8Release = v8Debug
+  } else if (project.hasProperty('V8_RELEASE') && project.V8_RELEASE) {
+    v8Release = V8_RELEASE
+    v8Debug = V8_RELEASE
+  }
+
+
+  buildTypes {
+    release {
+      minifyEnabled true
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      externalNativeBuild {
+        cmake {
+          arguments "-DJS_ENGINE=V8",
+            "-DANDROID_CPP_FEATURES=rtti exceptions",
+            "-DANDROID_PLATFORM=android-14",
+            "-DANDROID_STL=c++_shared",
+            "-DCMAKE_BUILD_TYPE=Release",
+            "-DV8_TAG=$V8_TAG",
+            "-DV8_RELEASE=$v8Release",
+            "-DEXT_JS_ENGINE_LIB=$EXT_JS_ENGINE_LIB"
+
+          if (INCLUDE_ABI_ARMEABI_V7A.toBoolean() || INCLUDE_ABI_ARMEABI.toBoolean()) {
+            abiFilters 'armeabi-v7a'
+          }
+          if (INCLUDE_ABI_ARM64_V8A.toBoolean()) {
+            abiFilters 'arm64-v8a'
+          }
+          if (INCLUDE_ABI_X86.toBoolean()) {
+            abiFilters 'x86'
+          }
+          if (INCLUDE_ABI_X86_64.toBoolean()) {
+            abiFilters 'x86_64'
+          }
+        }
+      }
+    }
+    debug {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      externalNativeBuild {
+        cmake {
+          arguments "-DJS_ENGINE=V8",
+            "-DANDROID_CPP_FEATURES=rtti exceptions",
+            "-DANDROID_PLATFORM=android-14",
+            "-DANDROID_STL=c++_shared",
+            "-DCMAKE_BUILD_TYPE=Debug",
+            "-DV8_TAG=$V8_TAG",
+            "-DV8_RELEASE=$v8Debug",
+            "-DEXT_JS_ENGINE_LIB=$EXT_JS_ENGINE_LIB"
+
+          abiFilters 'arm64-v8a','armeabi-v7a','x86','x86_64'
+        }
+      }
+    }
+  }
+
+  if (!SKIP_CMAKE_AND_NINJA.toBoolean() || !skipCmakeAndNinja) {
+    externalNativeBuild {
+      cmake {
+        path CMAKE_PATH
+      }
+    }
+  }
+
+  tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+  }
+
+  sourceSets{
+    main {
+      if (INCLUDE_SUPPORT_UI.toBoolean() == false) {
+        java.exclude("com/tencent/mtt/supportui/**")
+      }
+
+      jniLibs.srcDirs = ["${THIRD_PARTY_LIBRARY_PATH}/layout"]
+    }
+  }
+}
+
+dependencies {
+  api fileTree(dir: 'libs', include: ['*.jar'])
+  implementation 'com.android.support:support-annotations:28.0.0'
+  implementation 'com.android.support:recyclerview-v7:28.0.0'
+  implementation 'com.quicktvui:base-ui:0.2.0'
+  if (!INCLUDE_SUPPORT_UI.toBoolean()) {
+    compileOnly('com.tencent.mtt:support-ui:99.2.3')
+  }
+}
+
+project.tasks.whenTaskAdded { task ->
+  if (task.name == 'assembleRelease') {
+    task.finalizedBy dealAfterAssembleRelease
+  }
+
+  if (task.name == 'assembleDebug') {
+    task.finalizedBy dealAfterAssembleDebug
+  }
+
+  if (task.name == 'mergeReleaseNativeLibs') {
+    task.finalizedBy dealAfterMergeReleaseNativeLibs
+  }
+
+  if (task.name == 'mergeDebugNativeLibs') {
+    task.finalizedBy dealAfterMergeDebugNativeLibs
+  }
+}
+
+def MERGED_NATIVE_LIBS_PATH = "$buildDir/intermediates/merged_native_libs"
+task dealAfterMergeReleaseNativeLibs() {
+  doLast {
+    def MERGED_NATIVE_LIBS = "$MERGED_NATIVE_LIBS_PATH/release/out/lib"
+    copy {
+      from "$MERGED_NATIVE_LIBS/armeabi-v7a"
+      into "$MERGED_NATIVE_LIBS/armeabi"
+    }
+  }
+}
+
+task dealAfterMergeDebugNativeLibs() {
+  doLast {
+    def MERGED_NATIVE_LIBS = "$MERGED_NATIVE_LIBS_PATH/debug/out/lib"
+    copy {
+      from "$MERGED_NATIVE_LIBS/armeabi-v7a"
+      into "$MERGED_NATIVE_LIBS/armeabi"
+    }
+  }
+}
+
+task dealAfterAssembleDebug() {
+  doLast {
+    file("$OUTPUT_PATH/debug").deleteDir()
+
+    file(OUTPUT_PATH).list().each{fileName ->
+      if (fileName.contains("debug.aar")) {
+        copy {
+          from zipTree("$OUTPUT_PATH/$fileName")
+          into "$OUTPUT_PATH/debug"
+        }
+        copy {
+          from "$OUTPUT_PATH/debug"
+          into OUTPUT_PATH
+          include 'classes.jar'
+          rename 'classes.jar', 'hippy.jar'
+        }
+      }
+    }
+  }
+}
+
+task dealAfterAssembleRelease() {
+  doLast {
+    file("$OUTPUT_PATH/release").deleteDir()
+
+    file(OUTPUT_PATH).list().each{fileName ->
+      if (fileName.contains("release.aar")) {
+        copy {
+          from zipTree("$OUTPUT_PATH/$fileName")
+          into "$OUTPUT_PATH/release"
+        }
+        copy {
+          from "$OUTPUT_PATH/release"
+          into OUTPUT_PATH
+          include 'classes.jar'
+          rename 'classes.jar', 'hippy.jar'
+        }
+      }
+    }
+    copy {
+      from "$OUTPUT_PATH/$ARCHIVES_BASE_NAME-release.aar"
+      into "$projectDir.absolutePath/../../examples/android-demo/example/libs"
+    }
+  }
+}
+
+//tasks.publishToMavenLocal.dependsOn tasks.assembleRelease

@@ -1,0 +1,30 @@
+{
+  "name": "@huantv/vue",
+  "version": "1.1.8",
+  "description": "Hippy Vue for TV",
+  "author": "zhaopeng <zhaopengdev@163.com>",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "types": "types/index.d.ts",
+  "homepage": "http://quicktvui.com",
+  "repository": "https://github.com/Tencent/Hippy/tree/master/packages/hippy-vue",
+  "bugs": {
+    "url": "https://github.com/Tencent/Hippy/issues"
+  },
+  "keywords": [
+    "hippy",
+    "hippy-vue",
+    "native",
+    "web",
+    "framework",
+    "compiler"
+  ],
+  "devDependencies": {
+    "ava": "^3.5.0",
+    "glob-parent": "^5.1.2",
+    "hosted-git-info": "~3.0.8",
+    "lodash": "~4.17.21",
+    "normalize-url": "^4.5.1",
+    "y18n": "^4.0.1"
+  }
+}

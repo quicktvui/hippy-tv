@@ -1,0 +1,23 @@
+name: Update Directory Structure
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * *'  # 每天自动更新一次
+
+jobs:
+  generate-tree:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate directory tree
+        run: |
+          apt-get install tree -y
+          tree -L 3 --dirsfirst -I "node_modules|.git|dist" > DIRECTORY.md
+      - name: Commit changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add DIRECTORY.md
+          git commit -m "Auto-update directory structure" || echo "No changes"
+          git push

@@ -1,0 +1,108 @@
+
+apply plugin: 'maven-publish'
+//apply plugin: 'signing'
+
+//ext["signing.keyId"] = System.getenv('SIGNING_KEY_ID')
+//ext["signing.password"] = System.getenv('SIGNING_PASSWORD')
+//ext["signing.secretKeyRingFile"] = System.getenv('SIGNING_SECRET_KEY_RING_FILE')
+//ext["ossrhUsername"] = System.getenv('OSSRH_USERNAME')
+//ext["ossrhPassword"] = System.getenv('OSSRH_PASSWORD')
+
+//println("signing.keyId=" + ext["signing.keyId"])
+//println("signing.password=" + ext["signing.password"])
+//println("signing.secretKeyRingFile=" + ext["signing.secretKeyRingFile"])
+//println("ossrhUsername=" + ossrhUsername)
+//println("ossrhPassword=" + ossrhPassword)
+
+//if (!file("local.properties").exists()) {
+//  throw new GradleException("local.properties not found, please create it.")
+//}
+def localProperties = new Properties()
+if(project.file("./local.properties").exists()) {
+  localProperties.load(new FileInputStream(project.file("./local.properties")))
+}
+
+ext{
+  MAVEN_REPO_URL_RELEASE = System.getenv("MAVEN_REPO_URL_RELEASE") != null ? System.getenv("MAVEN_REPO_URL_RELEASE") : localProperties.getProperty("MAVEN_REPO_URL_RELEASE")
+  MAVEN_REPO_URL_SNAPSHOT = System.getenv("MAVEN_REPO_URL_SNAPSHOT") != null ? System.getenv("MAVEN_REPO_URL_SNAPSHOT") :localProperties.getProperty("MAVEN_REPO_URL_SNAPSHOT")
+  MAVEN_USERNAME = System.getenv("MAVEN_USERNAME") != null ? System.getenv("MAVEN_USERNAME"): localProperties.getProperty("MAVEN_USERNAME")
+  MAVEN_PASSWORD = System.getenv("MAVEN_PASSWORD") != null ? System.getenv("MAVEN_PASSWORD"): localProperties.getProperty("MAVEN_PASSWORD")
+}
+if(!MAVEN_REPO_URL_RELEASE || !MAVEN_REPO_URL_SNAPSHOT) {
+  System.err.println("MAVEN_REPO_URL_RELEASE or MAVEN_REPO_URL_SNAPSHOT not found, please check local.properties on path .${project.projectDir}")
+}
+if(!MAVEN_USERNAME || !MAVEN_PASSWORD) {
+  System.err.println(("MAVEN_USERNAME or MAVEN_PASSWORD not found, please check local.properties."))
+}
+
+println("PUBLISH_GROUP_ID:"+PUBLISH_GROUP_ID)
+println("PUBLISH_ARTIFACT_ID:"+PUBLISH_ARTIFACT_ID)
+println("VERSION_NAME:"+VERSION_NAME)
+println("ARCHIVES_BASE_NAME:"+ARCHIVES_BASE_NAME)
+println("ARCHIVES_BASE_NAME:"+ARCHIVES_BASE_NAME)
+println("MAVEN_REPO_URL_RELEASE=" + MAVEN_REPO_URL_RELEASE)
+println("MAVEN_REPO_URL_SNAPSHOT=" + MAVEN_REPO_URL_SNAPSHOT)
+def RELEASE = true
+if(project.hasProperty("V8_RELEASE") && project.V8_RELEASE){
+  RELEASE = true
+}else{
+  RELEASE = false
+}
+println("RELEASE PUBLSH:"+RELEASE)
+println("FINAL:"+PUBLISH_GROUP_ID+":"+PUBLISH_ARTIFACT_ID+":"+VERSION_NAME)
+publishing {
+    publications {
+        mavenAar(MavenPublication) {
+          if(RELEASE){
+            artifact("$buildDir/outputs/aar/${ARCHIVES_BASE_NAME}-release.aar")
+          }else{
+            artifact("$buildDir/outputs/aar/${ARCHIVES_BASE_NAME}-debug.aar")
+          }
+            groupId PUBLISH_GROUP_ID
+            artifactId PUBLISH_ARTIFACT_ID
+            version VERSION_NAME
+            pom {
+                name = PUBLISH_ARTIFACT_ID
+                description = PUBLISH_VERSION_DESC
+                url = PUBLISH_GIT_URL
+                licenses {
+                    license {
+                        name = 'The Apache Software License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = PUBLISH_ARTIFACT_ID
+                        name = 'hippy-tv'
+                        email = 'zhaopengdev@163.com'
+                    }
+                }
+                scm {
+                    connection = "scm:git@github.com:Tencent/Hippy.git"
+                    developerConnection = "scm:git@github.com:Tencent/Hippy.git"
+                    url = PUBLISH_GIT_URL
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            allowInsecureProtocol = true
+            def releasesRepoUrl = MAVEN_REPO_URL_RELEASE
+            def snapshotsRepoUrl = MAVEN_REPO_URL_SNAPSHOT
+            url = VERSION_NAME.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+            credentials {
+                username MAVEN_USERNAME
+                password MAVEN_PASSWORD
+            }
+        }
+    }
+}
+
+//signing {
+//    sign publishing.publications.mavenAar
+//}
+
+

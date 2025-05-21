@@ -1,0 +1,23 @@
+{
+  "name": "@huantv/vue-router",
+  "version": "1.1.0",
+  "description": "Official router for hippy-vue",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "homepage": "http://hippyjs.org",
+  "repository": "https://github.com/Tencent/Hippy/tree/master/packages/hippy-vue-router",
+  "author": "XQ Kuang <x@kxq.io>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Tencent/Hippy/issues"
+  },
+  "keywords": [
+    "vue",
+    "hippy-vue",
+    "router",
+    "routing"
+  ],
+  "devDependencies": {
+    "path-to-regexp": "^1.7.0"
+  }
+}
