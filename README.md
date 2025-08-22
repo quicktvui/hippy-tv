@@ -154,6 +154,7 @@ INPUT_PREFERENCE=focus
 
 ### 高优先级 (High Priority)
 - ✅ 列表组件重构，更方便使用 *(即将release)*
+- ◻️ 鸿蒙平台适配（HarmonyOS）*进行中*
 - ◻️ 列表滚动体验优化
 - 🚧 ul组件支持Grid布局
 - ◻️ 更多css样式支持
@@ -163,8 +164,7 @@ INPUT_PREFERENCE=focus
 
 ### 中优先级 (Medium Priority)
 - ◻️ 合并 Hippy 最新版本
-### 规划中 (Planned)
-- ◻️ 鸿蒙（HarmonyOS）初步适配
+
 
 
 ## 版本说明
